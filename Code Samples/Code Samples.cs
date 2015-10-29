@@ -25,8 +25,10 @@ public class IntegerSolution : List<int>
         return this.SequenceEqual(otherSolution);
     }
     
-    //In order to compare solutions, the order of the elements should be neglected but because the value are not sorted in the list, the same values on different order will not be equal.
-    //By sorting a copy of the values before calculating the hash, the correct comparison of two solutions is possible. without actually sorting the values (not desired).
+    //In order to compare solutions, the order of the elements should be neglected but because the value 
+    //are not sorted in the list, the same values on different order will not be equal.
+    //By sorting a copy of the values before calculating the hash, the correct comparison of two solutions is possible
+    //without actually sorting the values (not desired).
     public override int GetHashCode()
     {
         //Copy the values and sort them
@@ -46,8 +48,9 @@ public class IntegerSolution : List<int>
     }
 }
 
-//This function takes a list of solutions, and place the solutions on the grid, trying to make use of the least amount of cells (usings already assigned if possible)
-//while trying to avoid creating addtional solutions by assigning a cell next to an already assigned cell that can create a new undesired solution
+//This function takes a list of solutions, and place the solutions on the grid, trying to make use of the 
+//least amount of cells (usings already assigned if possible while trying to avoid creating addtional solutions
+//by assigning a cell next to an already assigned cell that can create a new undesired solution
 static bool PlaceSolutionsInGrid(CellBase[,] grid, List<IntegerSolution> orderedSolutions, IntegerSolution origSolution, int target, Main.SolvingDelegate solvDelegate, CellBase previousCell)
 {
     if (orderedSolutions.Count == 0)
@@ -70,7 +73,8 @@ static bool PlaceSolutionsInGrid(CellBase[,] grid, List<IntegerSolution> ordered
         else
         {
             origSolution = new IntegerSolution(orderedSolutions.First());
-            return PlaceSolutionsInGrid(grid, orderedSolutions, origSolution, target, solvDelegate, null); //all numbers successfully placed, go to next solution;
+             //all numbers successfully placed, go to next solution;
+            return PlaceSolutionsInGrid(grid, orderedSolutions, origSolution, target, solvDelegate, null);
         }
     }
 
@@ -105,7 +109,8 @@ static bool PlaceSolutionsInGrid(CellBase[,] grid, List<IntegerSolution> ordered
 
         if (cell.Value == number)
         {
-            if (PlaceSolutionsInGrid(grid, orderedSolutions, origSolution, target, solvDelegate, cell)) //recur to see if it is successfully
+            //recur to see if it is successfully
+            if (PlaceSolutionsInGrid(grid, orderedSolutions, origSolution, target, solvDelegate, cell)) 
                 return true;
         }
     }
@@ -131,7 +136,8 @@ static bool PlaceSolutionsInGrid(CellBase[,] grid, List<IntegerSolution> ordered
         {
             cell.Value = number; //try assigning the number
            
-            if (PlaceSolutionsInGrid(grid, orderedSolutions, origSolution ,target, solvDelegate, cell)) //recur to see if it is successfully
+            //recur to see if it is successfully
+            if (PlaceSolutionsInGrid(grid, orderedSolutions, origSolution ,target, solvDelegate, cell)) 
                 return true;
 
             cell.Value = UNASSIGNED; //unassign the number to try a new one
@@ -157,7 +163,8 @@ static bool PlaceSolutionsInGrid(CellBase[,] grid, List<IntegerSolution> ordered
 }
 
 //Tests where a number can be assigned in a cell without creating a new undesired solution
-static bool NumberCanBeAssigned(CellBase[,] grid, CellBase cell, int number, int target, IntegerSolution solution, Main.SolvingDelegate solvDelegate)
+static bool NumberCanBeAssigned(CellBase[,] grid, CellBase cell, int number, int target, 
+                                IntegerSolution solution, Main.SolvingDelegate solvDelegate)
 {
     CellBase cellToCheck;
 
@@ -176,7 +183,8 @@ static bool NumberCanBeAssigned(CellBase[,] grid, CellBase cell, int number, int
 
             cellToCheck = grid[indexX, indexY];
 
-            if (cellToCheck.Value != UNASSIGNED && !solution.Contains(cellToCheck.Value) && solvDelegate(number, cellToCheck.Value) == target)
+            if (cellToCheck.Value != UNASSIGNED && !solution.Contains(cellToCheck.Value) &&
+                solvDelegate(number, cellToCheck.Value) == target)
                 return false;
         }
     }
@@ -229,7 +237,8 @@ static bool FindUnassignedCell(CellBase[,] grid, ref CellBase unassignedCell)
 }
 
 //This class defines a solution, that is a set of cells from the grid, whose values form a solution
-//.NET 3.5 which Unity supports does not have SortedSet collection (tree based, sorted). Use Hashset instead (Hash table based, random order)
+//.NET 3.5 which Unity supports does not have SortedSet collection (tree based, sorted).
+//Use Hashset instead (Hash table based, random order)
 public class Solution : HashSet<CellBase>
 {
     public override bool Equals(object obj)
@@ -242,8 +251,9 @@ public class Solution : HashSet<CellBase>
         return this.SetEquals(otherSolution);
     }
 
-    //In order to compare solutions, the set must be the same. Because a Hashset structure is being used, the value are not sorted
-    //so when the hash is calculated (from comparisson purposes for example) the set is coppied to a list, then sorted by the index of the cells in the solution.
+    //In order to compare solutions, the set must be the same. Because a Hashset structure is being used,3
+    //the value are not sorted so when the hash is calculated (from comparisson purposes for example) 
+    //the set is coppied to a list, then sorted by the index of the cells in the solution.
     //This enables the correct comparison of two solutions, because the order is neglected (as they are both sorted)
     public override int GetHashCode()
     {
@@ -288,7 +298,8 @@ public class FunctionalComparer<T> : IComparer<T>
 
 
 //Returns the set of solutions for a given grid, for a certain target and solving type
-//For each cell of the grid, the function RecursiveSolveSearch is called, and the resulting solutions are added to the value to be returned
+//For each cell of the grid, the function RecursiveSolveSearch is called 
+//and the resulting solutions are added to the value to be returned
 public static HashSet<Solution> Solve(int target, CellBase[,] grid, Main.SolvingDelegate Solving)
 {
     int initialValue = (solvingDelegate == Main.Addition) ? (0) : (1);
@@ -322,7 +333,8 @@ public static HashSet<Solution> Solve(int target, CellBase[,] grid, Main.Solving
     return solutions;
 }
 
-//Recursive function, that starts on a given cell, and find solutions for a target and solving type, jumping to other neighbouring cells using a deep-first approach
+//Recursive function, that starts on a given cell, and find solutions for a target and solving type, 
+//jumping to other neighbouring cells using a deep-first approach
 static HashSet<Solution> RecursiveSolveSearch(int i, int j, Solution currentSolution, 
                                                     int sum, int result, CellBase[,] grid, Main.SolvingDelegate Solving)
 {
