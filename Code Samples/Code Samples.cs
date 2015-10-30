@@ -48,9 +48,9 @@ public class IntegerSolution : List<int>
     }
 }
 
-//This function takes a list of solutions, and place the solutions on the grid, trying to make use of the 
-//least amount of cells (usings already assigned if possible while trying to avoid creating addtional solutions
-//by assigning a cell next to an already assigned cell that can create a new undesired solution
+//This function uses recursive backtracking to try to place a list of solutions on the grid, trying to make use of the 
+//least amount of cells (usings already assigned cells if possible) while trying to avoid creating addtional solutions.
+
 static bool PlaceSolutionsInGrid(CellBase[,] grid, List<IntegerSolution> orderedSolutions, IntegerSolution origSolution, int target, Main.SolvingDelegate solvDelegate, CellBase previousCell)
 {
     if (orderedSolutions.Count == 0)
